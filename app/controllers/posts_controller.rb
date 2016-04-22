@@ -1,7 +1,27 @@
 class PostsController < ApplicationController
+  #helper_method :params
 
   def index
+    #raise params.inspect
     @posts = Post.all
+    @authors = Author.all
+
+    if !params[:author].blank?
+      # if filter by author, return posts with that author
+      @posts = Post.by_author(params[:author])
+    elsif !params[:date].blank?
+      #if filter by date
+      if params[:date] == "Today"
+        #return posts from today
+        @posts = Post.from_today
+      else
+        #return posts from before today
+        @posts = Post.old_news
+      end
+    else
+      # if not filters, show them all
+      @posts = Post.all
+    end
   end
 
   def show
